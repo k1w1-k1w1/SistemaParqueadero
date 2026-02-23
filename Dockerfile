@@ -1,9 +1,8 @@
-﻿# ── Etapa 1: Build ────────────────────────────────────────────────────────────
-# El build context es la carpeta SistemaParqueadero/ (padre de API y Models)
+﻿	# ── Etapa 1: Build ────────────────────────────────────────────────────────────
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copiar .csproj de ambos proyectos primero (cache de capas)
+# Copiar .csproj primero (mejor cache de capas)
 COPY ["SistemaParqueadero/Models.csproj", "SistemaParqueadero/"]
 COPY ["SistemaParqueadero.API/SistemaParqueadero.API.csproj", "SistemaParqueadero.API/"]
 
