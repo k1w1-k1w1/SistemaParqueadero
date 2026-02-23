@@ -1,0 +1,319 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Usuario</title>
+    <link rel="stylesheet" href="/css/login.css?v=9999" />
+    <style>
+        .dash {
+            width: min(1100px,94vw);
+            position: relative;
+            z-index: 2;
+        }
+
+        .top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .titleBox h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .titleBox .sub {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn2 {
+            border: 1px solid rgba(15, 23, 42, .12);
+            background: rgba(255,255,255,.9);
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+            box-shadow: 0 10px 20px rgba(15,23,42,.06);
+        }
+
+            .btn2:hover {
+                transform: translateY(-1px);
+                border-color: rgba(225,6,0,.25);
+            }
+
+            .btn2.red {
+                border: 0;
+                color: #fff;
+                background: linear-gradient(135deg, var(--red), var(--red2));
+                box-shadow: 0 18px 34px rgba(225, 6, 0, .22);
+            }
+
+        .panel {
+            background: rgba(255,255,255,.85);
+            border: 1px solid rgba(15, 23, 42, .10);
+            border-radius: 20px;
+            box-shadow: 0 30px 70px rgba(15, 23, 42, .12);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+        }
+
+            .panel h2 {
+                margin: 0;
+                font-size: 18px;
+            }
+
+        .muted {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            align-items: center;
+        }
+
+        .input {
+            flex: 1 1 240px;
+            border: 1px solid rgba(15, 23, 42, .12);
+            border-radius: 14px;
+            padding: 12px;
+            outline: none;
+            background: rgba(255,255,255,.9);
+            transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+            font-size: 14px;
+        }
+
+            .input:focus {
+                border-color: rgba(225, 6, 0, .55);
+                box-shadow: 0 0 0 6px rgba(225, 6, 0, .10);
+                transform: translateY(-1px);
+            }
+
+        .tableWrap {
+            margin-top: 12px;
+            overflow: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(15, 23, 42, .10);
+            background: rgba(255,255,255,.92);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 820px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(15,23,42,.08);
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,.98);
+            z-index: 1;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: rgba(15,23,42,.65);
+            letter-spacing: .25px;
+        }
+
+        tr:hover td {
+            background: rgba(225, 6, 0, .03);
+        }
+
+        .status {
+            margin-top: 10px;
+            min-height: 18px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+            .status.ok {
+                color: #059669;
+            }
+
+            .status.err {
+                color: #dc2626;
+            }
+    </style>
+</head>
+
+<body>
+    <main class="auth">
+        <section class="dash">
+            <div class="top">
+                <div class="titleBox">
+                    <h1>Usuario</h1>
+                    <div class="sub">Consulta de tickets e historial</div>
+                </div>
+                <div class="actions">
+                    <button class="btn2" id="btnReload">Recargar</button>
+                    <button class="btn2 red" id="btnLogout">Salir</button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Buscar</h2>
+                <div class="muted">Activos por placa e historial por placa.</div>
+
+                <div class="row">
+                    <input class="input" id="placa" placeholder="Placa..." />
+                    <button class="btn2" id="btnActivo">Ver activo</button>
+                    <button class="btn2" id="btnHistorial">Ver historial</button>
+                    <button class="btn2" id="btnLimpiar">Limpiar</button>
+                </div>
+
+                <div class="status" id="st"></div>
+
+                <div class="tableWrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Registro</th>
+                                <th>Estado</th>
+                                <th>Tarifa</th>
+                                <th>Ingreso</th>
+                                <th>Salida</th>
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <div class="bg" aria-hidden="true">
+            <div class="blob b1"></div>
+            <div class="blob b2"></div>
+            <div class="grid"></div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { apiFetch } from "/js/api.js";
+        import { getRole, logout } from "/js/auth.js";
+
+        const role = getRole();
+        if (!role) logout(); // cualquier rol puede ver, pero debe estar logueado
+
+        document.getElementById("btnLogout").addEventListener("click", logout);
+        document.getElementById("btnReload").addEventListener("click", () => clear());
+
+        const placa = document.getElementById("placa");
+        const st = document.getElementById("st");
+        const tbody = document.getElementById("tbody");
+
+        document.getElementById("btnActivo").addEventListener("click", () => activo());
+        document.getElementById("btnHistorial").addEventListener("click", () => historial());
+        document.getElementById("btnLimpiar").addEventListener("click", () => clear());
+
+        function set(txt, type = "") {
+            st.className = "status " + (type || "");
+            st.textContent = txt || "";
+        }
+
+        function fmt(d) {
+            if (!d) return "";
+            try { return new Date(d).toLocaleString(); } catch { return d; }
+        }
+
+        function clear() {
+            placa.value = "";
+            tbody.innerHTML = "";
+            set("");
+        }
+
+        async function activo() {
+            const p = (placa.value || "").trim();
+            if (!p) { set("Placa requerida.", "err"); return; }
+
+            set("Buscando...");
+            tbody.innerHTML = "";
+
+            const res = await apiFetch(`/api/parqueo/activo-por-placa/${encodeURIComponent(p)}`);
+            const data = await safeJson(res);
+
+            if (!res.ok) {
+                set(data?.message || "No existe activo para esa placa.", "err");
+                return;
+            }
+
+            tbody.innerHTML = `
+            <tr>
+              <td><b>${data.registroId}</b></td>
+              <td>${data.estado ?? "Activo"}</td>
+              <td>${data.tipoTarifa}</td>
+              <td>${fmt(data.fechaHoraIngreso)}</td>
+              <td></td>
+              <td></td>
+            </tr>
+          `;
+
+            set("Activo encontrado.", "ok");
+        }
+
+        async function historial() {
+            const p = (placa.value || "").trim();
+            if (!p) { set("Placa requerida.", "err"); return; }
+
+            set("Cargando historial...");
+            tbody.innerHTML = "";
+
+            const res = await apiFetch(`/api/parqueo/historial/${encodeURIComponent(p)}`);
+            const data = await safeJson(res);
+
+            if (!res.ok) {
+                set(data?.message || "No hay historial.", "err");
+                return;
+            }
+
+            const items = data.historial || data.Historial || [];
+            if (!Array.isArray(items) || items.length === 0) {
+                set("No hay historial.", "");
+                return;
+            }
+
+            for (const r of items) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+              <td><b>${r.registroId}</b></td>
+              <td>${r.estado}</td>
+              <td>${r.tipoTarifa}</td>
+              <td>${fmt(r.fechaHoraIngreso)}</td>
+              <td>${fmt(r.fechaHoraSalida)}</td>
+              <td>${r.montoCobrado ?? ""}</td>
+            `;
+                tbody.appendChild(tr);
+            }
+
+            set(`Total: ${items.length}`, "ok");
+        }
+
+        async function safeJson(res) {
+            try { return await res.json(); } catch { return null; }
+        }
+    </script>
+</body>
+</html>

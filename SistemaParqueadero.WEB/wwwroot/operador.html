@@ -1,0 +1,787 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Operador</title>
+    <link rel="stylesheet" href="/css/login.css?v=9999" />
+    <style>
+        .dash {
+            width: min(1200px,94vw);
+            position: relative;
+            z-index: 2;
+        }
+
+        .top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .titleBox h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: .2px;
+        }
+
+        .titleBox .sub {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn2 {
+            border: 1px solid rgba(15, 23, 42, .12);
+            background: rgba(255,255,255,.9);
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+            box-shadow: 0 10px 20px rgba(15,23,42,.06);
+        }
+
+            .btn2:hover {
+                transform: translateY(-1px);
+                border-color: rgba(225,6,0,.25);
+            }
+
+            .btn2.red {
+                border: 0;
+                color: #fff;
+                background: linear-gradient(135deg, var(--red), var(--red2));
+                box-shadow: 0 18px 34px rgba(225, 6, 0, .22);
+            }
+
+                .btn2.red:hover {
+                    box-shadow: 0 22px 40px rgba(225, 6, 0, .26);
+                }
+
+        .grid2 {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: 1fr;
+        }
+
+        @media(min-width: 980px) {
+            .grid2 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .panel {
+            background: rgba(255,255,255,.85);
+            border: 1px solid rgba(15, 23, 42, .10);
+            border-radius: 20px;
+            box-shadow: 0 30px 70px rgba(15, 23, 42, .12);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+            animation: pop .55s cubic-bezier(.2,.9,.25,1) both;
+        }
+
+            .panel h2 {
+                margin: 0;
+                font-size: 18px;
+                letter-spacing: .2px;
+            }
+
+        .muted {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            align-items: center;
+        }
+
+        .input {
+            flex: 1 1 240px;
+            border: 1px solid rgba(15, 23, 42, .12);
+            border-radius: 14px;
+            padding: 12px;
+            outline: none;
+            background: rgba(255,255,255,.9);
+            transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+            font-size: 14px;
+        }
+
+            .input:focus {
+                border-color: rgba(225, 6, 0, .55);
+                box-shadow: 0 0 0 6px rgba(225, 6, 0, .10);
+                transform: translateY(-1px);
+            }
+
+        .select {
+            flex: 0 0 170px;
+            border: 1px solid rgba(15, 23, 42, .12);
+            border-radius: 14px;
+            padding: 12px;
+            outline: none;
+            background: rgba(255,255,255,.9);
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        .tableWrap {
+            margin-top: 12px;
+            overflow: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(15, 23, 42, .10);
+            background: rgba(255,255,255,.92);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 860px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(15,23,42,.08);
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,.98);
+            z-index: 1;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: rgba(15,23,42,.65);
+            letter-spacing: .25px;
+        }
+
+        tr:hover td {
+            background: rgba(225, 6, 0, .03);
+        }
+
+        .status {
+            margin-top: 10px;
+            min-height: 18px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+            .status.ok {
+                color: #059669;
+            }
+
+            .status.err {
+                color: #dc2626;
+            }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(15, 23, 42, .12);
+            font-weight: 900;
+            font-size: 12px;
+            background: rgba(15,23,42,.03);
+            color: rgba(15,23,42,.75);
+        }
+
+            .pill.vip {
+                border-color: rgba(225,6,0,.28);
+                background: rgba(225,6,0,.06);
+                color: rgba(225,6,0,.95);
+            }
+
+            .pill.std {
+                border-color: rgba(15,23,42,.14);
+                background: rgba(15,23,42,.03);
+                color: rgba(15,23,42,.75);
+            }
+
+        .mini {
+            border: 1px solid rgba(15, 23, 42, .12);
+            background: rgba(255,255,255,.9);
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 12px;
+            cursor: pointer;
+            transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+            box-shadow: 0 8px 16px rgba(15,23,42,.06);
+        }
+
+            .mini:hover {
+                transform: translateY(-1px);
+                border-color: rgba(225,6,0,.22);
+            }
+
+            .mini.red {
+                border: 0;
+                color: #fff;
+                background: linear-gradient(135deg, var(--red), var(--red2));
+                box-shadow: 0 12px 22px rgba(225,6,0,.20);
+            }
+
+        /* Modal moderno */
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,.35);
+            display: none;
+            place-items: center;
+            z-index: 50;
+            animation: fade .18s ease both;
+        }
+
+            .backdrop.show {
+                display: grid;
+            }
+
+        .modal {
+            width: min(520px, 92vw);
+            background: rgba(255,255,255,.95);
+            border: 1px solid rgba(15,23,42,.10);
+            border-radius: 18px;
+            box-shadow: 0 30px 70px rgba(15,23,42,.20);
+            padding: 16px;
+            animation: pop .22s ease both;
+        }
+
+        .modalTop {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+            .modalTop h3 {
+                margin: 0;
+                font-size: 16px;
+            }
+
+        .x {
+            border: 1px solid rgba(15,23,42,.12);
+            background: rgba(255,255,255,.9);
+            border-radius: 12px;
+            padding: 8px 10px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .kv {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+            .kv .box {
+                border: 1px solid rgba(15,23,42,.10);
+                background: rgba(255,255,255,.9);
+                border-radius: 14px;
+                padding: 10px;
+            }
+
+        .k {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .3px;
+        }
+
+        .v {
+            margin-top: 4px;
+            font-weight: 900;
+        }
+
+
+        .histPager {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+            .histPager span {
+                font-size: 13px;
+                color: var(--muted);
+                font-weight: 900;
+            }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="auth">
+        <section class="dash">
+            <div class="top">
+                <div class="titleBox">
+                    <h1>Operador</h1>
+                    <div class="sub">Entradas, salidas y activos</div>
+                </div>
+                <div class="actions">
+                    <button class="btn2" id="btnReload">Recargar</button>
+                    <button class="btn2 red" id="btnLogout">Salir</button>
+                </div>
+            </div>
+
+            <div class="grid2">
+
+                <!-- Entrada -->
+                <div class="panel">
+                    <h2>Entrada</h2>
+                    <div class="muted">Registra ingreso por placa del vehículo.</div>
+
+                    <div class="row">
+                        <input class="input" id="placaIn" type="text" placeholder="Placa (ej: ABC-1234)" style="text-transform:uppercase" />
+                        <select class="select" id="tipoTarifa">
+                            <option value="Estandar">Estandar</option>
+                            <option value="VIP">VIP</option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <input class="input" id="obsIn" type="text" placeholder="Observaciones (opcional)" />
+                        <button class="btn2 red" id="btnEntrada">Registrar</button>
+                    </div>
+
+                    <div class="status" id="stEntrada"></div>
+                </div>
+
+                <!-- Salida -->
+                <div class="panel">
+                    <h2>Salida</h2>
+                    <div class="muted">Cierra un ticket activo por placa del vehículo.</div>
+
+                    <div class="row">
+                        <input class="input" id="placaOut" type="text" placeholder="Placa (ej: ABC-1234)" style="text-transform:uppercase" />
+                        <select class="select" id="metodoPago">
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Tarjeta">Tarjeta</option>
+                            <option value="Transferencia">Transferencia</option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <input class="input" id="obsOut" type="text" placeholder="Observaciones (opcional)" />
+                        <button class="btn2 red" id="btnSalida">Cerrar</button>
+                    </div>
+
+                    <div class="status" id="stSalida"></div>
+                </div>
+
+                <!-- Activos -->
+                <div class="panel" style="grid-column:1/-1;">
+                    <h2>Activos</h2>
+                    <div class="muted">Vehículos dentro del parqueadero.</div>
+
+                    <div class="row">
+                        <input class="input" id="placaSearch" placeholder="Placa..." />
+                        <button class="btn2" id="btnBuscarPlaca">Buscar</button>
+                        <button class="btn2" id="btnLimpiar">Limpiar</button>
+                    </div>
+
+                    <div class="tableWrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Registro</th>
+                                    <th>VehiculoId</th>
+                                    <th>Placa</th>
+                                    <th>Tarifa</th>
+                                    <th>Ingreso</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="status" id="stActivos"></div>
+                </div>
+
+
+                <!-- Historial completo -->
+                <div class="panel" style="grid-column:1/-1;">
+                    <h2>Historial completo</h2>
+                    <div class="muted">Todos los registros de entrada y salida. Filtra por placa o estado.</div>
+
+                    <div class="row">
+                        <input class="input" id="placaHist" placeholder="Filtrar por placa..." style="text-transform:uppercase" />
+                        <select class="select" id="estadoHist">
+                            <option value="">Todos</option>
+                            <option value="Activo">Activo</option>
+                            <option value="Cerrado">Cerrado</option>
+                        </select>
+                        <button class="btn2" id="btnFiltrarHist">Filtrar</button>
+                        <button class="btn2" id="btnLimpiarHist">Limpiar</button>
+                    </div>
+
+                    <div class="tableWrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Placa</th>
+                                    <th>Estado</th>
+                                    <th>Tarifa</th>
+                                    <th>Ingreso</th>
+                                    <th>Salida</th>
+                                    <th>Horas</th>
+                                    <th>Monto</th>
+                                    <th>Método</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyHist"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="histPager">
+                        <button class="btn2" id="btnPrevHist">&#8592; Anterior</button>
+                        <span id="histPageInfo">Página 1</span>
+                        <button class="btn2" id="btnNextHist">Siguiente &#8594;</button>
+                    </div>
+
+                    <div class="status" id="stHistorial"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="bg" aria-hidden="true">
+            <div class="blob b1"></div>
+            <div class="blob b2"></div>
+            <div class="grid"></div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div class="backdrop" id="backdrop" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="Detalle ticket">
+            <div class="modalTop">
+                <h3 id="mTitle">Ticket</h3>
+                <button class="x" id="mClose" type="button">Cerrar</button>
+            </div>
+            <div class="kv" id="mKv"></div>
+            <div class="status" id="mStatus"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { apiFetch } from "/js/api.js";
+        import { getRole, logout } from "/js/auth.js";
+
+        const role = getRole();
+        if (!role || (role !== "Operador" && role !== "Administrador")) logout();
+
+        const stEntrada = document.getElementById("stEntrada");
+        const stSalida = document.getElementById("stSalida");
+        const stActivos = document.getElementById("stActivos");
+        const stHistorial = document.getElementById("stHistorial");
+
+        const placaIn = document.getElementById("placaIn");
+        const tipoTarifa = document.getElementById("tipoTarifa");
+        const obsIn = document.getElementById("obsIn");
+
+        const placaOut = document.getElementById("placaOut");
+        const metodoPago = document.getElementById("metodoPago");
+        const obsOut = document.getElementById("obsOut");
+
+        const placaSearch = document.getElementById("placaSearch");
+        const placaHist = document.getElementById("placaHist");
+        const estadoHist = document.getElementById("estadoHist");
+        const tbody = document.getElementById("tbody");
+        const tbodyHist = document.getElementById("tbodyHist");
+        const histPageInfo = document.getElementById("histPageInfo");
+        let histPage = 1;
+        let histTotal = 0;
+        const HIST_PAGE_SIZE = 50;
+
+        document.getElementById("btnLogout").addEventListener("click", logout);
+        document.getElementById("btnReload").addEventListener("click", () => loadActivos());
+        document.getElementById("btnBuscarPlaca").addEventListener("click", () => buscarPorPlaca());
+        document.getElementById("btnLimpiar").addEventListener("click", () => { placaSearch.value = ""; loadActivos(); });
+        document.getElementById("btnEntrada").addEventListener("click", registrarEntrada);
+        document.getElementById("btnSalida").addEventListener("click", registrarSalida);
+        document.getElementById("btnFiltrarHist").addEventListener("click", () => { histPage = 1; loadHistorial(); });
+        document.getElementById("btnLimpiarHist").addEventListener("click", () => {
+            placaHist.value = "";
+            estadoHist.value = "";
+            histPage = 1;
+            loadHistorial();
+        });
+        document.getElementById("btnPrevHist").addEventListener("click", () => {
+            if (histPage > 1) { histPage--; loadHistorial(false); }
+        });
+        document.getElementById("btnNextHist").addEventListener("click", () => {
+            if (histPage * HIST_PAGE_SIZE < histTotal) { histPage++; loadHistorial(false); }
+        });
+
+        // Modal
+        const backdrop = document.getElementById("backdrop");
+        const mClose = document.getElementById("mClose");
+        const mTitle = document.getElementById("mTitle");
+        const mKv = document.getElementById("mKv");
+        const mStatus = document.getElementById("mStatus");
+
+        mClose.addEventListener("click", closeModal);
+        backdrop.addEventListener("click", (e) => { if (e.target === backdrop) closeModal(); });
+
+        function openModal() { backdrop.classList.add("show"); backdrop.setAttribute("aria-hidden", "false"); }
+        function closeModal() { backdrop.classList.remove("show"); backdrop.setAttribute("aria-hidden", "true"); }
+
+        function set(el, txt, type = "") {
+            el.className = "status " + (type || "");
+            el.textContent = txt || "";
+        }
+
+        function fmt(d) {
+            if (!d) return "";
+            try { return new Date(d).toLocaleString(); } catch { return d; }
+        }
+
+        function tarifaPill(t) {
+            return t === "VIP"
+                ? '<span class="pill vip">VIP</span>'
+                : '<span class="pill std">Estandar</span>';
+        }
+
+        function estadoPill(e) {
+            return e === "Activo"
+                ? '<span class="pill on">Activo</span>'
+                : '<span class="pill std">Cerrado</span>';
+        }
+
+        // ── ENTRADA ─────────────────────────────────────────────────────────
+        async function registrarEntrada() {
+            set(stEntrada, "Procesando...");
+            const placa = placaIn.value.trim().toUpperCase();
+            if (!placa) { set(stEntrada, "Placa requerida.", "err"); return; }
+
+            const res = await apiFetch("/api/parqueo/entrada", {
+                method: "POST",
+                body: JSON.stringify({
+                    placa,
+                    tipoTarifa: tipoTarifa.value,
+                    observaciones: (obsIn.value || "").trim()
+                })
+            });
+
+            const data = await safeJson(res);
+            if (!res.ok) { set(stEntrada, data?.message || "Error al registrar entrada.", "err"); return; }
+
+            set(stEntrada, `✓ Entrada registrada — Ticket #${data.registroId}`, "ok");
+            placaIn.value = "";
+            obsIn.value = "";
+            await loadActivos();
+        }
+
+        // ── SALIDA ──────────────────────────────────────────────────────────
+        async function registrarSalida() {
+            set(stSalida, "Procesando...");
+            const placa = placaOut.value.trim().toUpperCase();
+            if (!placa) { set(stSalida, "Placa requerida.", "err"); return; }
+
+            const res = await apiFetch("/api/parqueo/salida", {
+                method: "POST",
+                body: JSON.stringify({
+                    placa,
+                    confirmarCierre: true,
+                    metodoPago: metodoPago.value,
+                    observaciones: (obsOut.value || "").trim()
+                })
+            });
+
+            const data = await safeJson(res);
+            if (!res.ok) { set(stSalida, data?.message || "Error al registrar salida.", "err"); return; }
+
+            set(stSalida, `✓ Salida registrada — $${data.montoCobrado} (${data.horasCalculadas}h)`, "ok");
+            placaOut.value = "";
+            obsOut.value = "";
+            await loadActivos();
+        }
+
+        // ── BUSCAR POR PLACA (activos) ───────────────────────────────────────
+        async function buscarPorPlaca() {
+            const p = (placaSearch.value || "").trim().toUpperCase();
+            if (!p) { loadActivos(); return; }
+
+            set(stActivos, "Buscando...");
+            tbody.innerHTML = "";
+
+            const res = await apiFetch(`/api/parqueo/activo-por-placa/${encodeURIComponent(p)}`);
+            const data = await safeJson(res);
+
+            if (!res.ok) { set(stActivos, data?.message || "No encontrado.", "err"); return; }
+
+            renderActivos([data]);
+            set(stActivos, "Resultado: 1", "ok");
+        }
+
+        // ── ACTIVOS ─────────────────────────────────────────────────────────
+        async function loadActivos() {
+            set(stActivos, "Cargando...");
+            tbody.innerHTML = "";
+
+            const res = await apiFetch("/api/parqueo/activos");
+            const data = await safeJson(res);
+
+            if (!res.ok) { set(stActivos, "No se pudo cargar.", "err"); return; }
+
+            renderActivos(Array.isArray(data) ? data : []);
+            set(stActivos, `Total: ${data?.length ?? 0}`, "ok");
+        }
+
+        function renderActivos(list) {
+            tbody.innerHTML = "";
+            for (const r of list) {
+                const id = r.registroId ?? r.RegistroId;
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                  <td><b>${id}</b></td>
+                  <td>${escapeHtml(r.placa ?? r.Placa ?? "")}</td>
+                  <td>${tarifaPill(r.tipoTarifa ?? r.TipoTarifa)}</td>
+                  <td>${fmt(r.fechaHoraIngreso ?? r.FechaHoraIngreso)}</td>
+                  <td><button class="mini" data-id="${id}">Detalle</button></td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        // ── HISTORIAL COMPLETO ──────────────────────────────────────────────
+        async function loadHistorial(resetScroll = true) {
+            set(stHistorial, "Cargando...");
+            if (resetScroll) tbodyHist.innerHTML = "";
+
+            const placa = (placaHist.value || "").trim().toUpperCase();
+            const estado = estadoHist.value;
+
+            let url = `/api/parqueo/historial?page=${histPage}&pageSize=${HIST_PAGE_SIZE}`;
+            if (placa) url += `&placa=${encodeURIComponent(placa)}`;
+            if (estado) url += `&estado=${encodeURIComponent(estado)}`;
+
+            const res = await apiFetch(url);
+            const data = await safeJson(res);
+
+            if (!res.ok) { set(stHistorial, data?.message || "Error al cargar historial.", "err"); return; }
+
+            const items = data.registros || data.Registros || [];
+            histTotal = data.total ?? data.Total ?? 0;
+
+            tbodyHist.innerHTML = "";
+
+            if (!items.length) {
+                set(stHistorial, "Sin registros para los filtros aplicados.", "");
+                updatePager();
+                return;
+            }
+
+            for (const r of items) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                  <td><b>${r.registroId}</b></td>
+                  <td>${escapeHtml(r.placa ?? "")}</td>
+                  <td>${estadoPill(r.estado)}</td>
+                  <td>${tarifaPill(r.tipoTarifa)}</td>
+                  <td>${fmt(r.fechaHoraIngreso)}</td>
+                  <td>${fmt(r.fechaHoraSalida)}</td>
+                  <td>${r.horasCalculadas != null ? r.horasCalculadas + "h" : ""}</td>
+                  <td>${r.montoCobrado != null ? "$" + r.montoCobrado : ""}</td>
+                  <td>${escapeHtml(r.metodoPago ?? "")}</td>
+                `;
+                tbodyHist.appendChild(tr);
+            }
+
+            const desde = (histPage - 1) * HIST_PAGE_SIZE + 1;
+            const hasta = Math.min(histPage * HIST_PAGE_SIZE, histTotal);
+            set(stHistorial, `Mostrando ${desde}–${hasta} de ${histTotal} registros`, "ok");
+            updatePager();
+        }
+
+        function updatePager() {
+            const totalPages = Math.ceil(histTotal / HIST_PAGE_SIZE) || 1;
+            histPageInfo.textContent = `Página ${histPage} de ${totalPages}`;
+            document.getElementById("btnPrevHist").disabled = histPage <= 1;
+            document.getElementById("btnNextHist").disabled = histPage >= totalPages;
+        }
+
+        // ── MODAL DETALLE ───────────────────────────────────────────────────
+        tbody.addEventListener("click", async (e) => {
+            const b = e.target.closest("button");
+            if (!b) return;
+            const id = b.dataset.id;
+            if (!id) return;
+
+            mTitle.textContent = `Ticket #${id}`;
+            mKv.innerHTML = "";
+            set(mStatus, "Cargando...");
+            openModal();
+
+            const res = await apiFetch(`/api/parqueo/ticket/${id}`);
+            const t = await safeJson(res);
+
+            if (!res.ok) { set(mStatus, t?.message || "No se pudo obtener ticket.", "err"); return; }
+
+            set(mStatus, "", "");
+
+            const rows = [
+                ["Estado", t.estado],
+                ["Placa", t.placa],
+                ["Tarifa", t.tipoTarifa],
+                ["Ingreso", fmt(t.fechaHoraIngreso)],
+                ["Salida", fmt(t.fechaHoraSalida)],
+                ["Horas", t.horasCalculadas ?? ""],
+                ["Monto", t.montoCobrado != null ? "$" + t.montoCobrado : ""],
+                ["Método", t.metodoPago ?? ""]
+            ];
+
+            for (const [k, v] of rows) {
+                const div = document.createElement("div");
+                div.className = "box";
+                div.innerHTML = `<div class="k">${escapeHtml(k)}</div><div class="v">${escapeHtml(String(v ?? ""))}</div>`;
+                mKv.appendChild(div);
+            }
+        });
+
+        async function safeJson(res) {
+            try { return await res.json(); } catch { return null; }
+        }
+
+        function escapeHtml(str) {
+            return (str ?? "").toString()
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        // init
+        loadActivos();
+        loadHistorial();
+    </script>
+</body>
+</html>
