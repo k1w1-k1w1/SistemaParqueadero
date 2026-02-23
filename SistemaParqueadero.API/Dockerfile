@@ -1,35 +1,32 @@
-# ====== BUILD STAGE ======
+﻿# ── Etapa 1: Build ────────────────────────────────────────────────────────────
+# El build context es la carpeta SistemaParqueadero/ (padre de API y Models)
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copiar soluci�n y csproj primero (mejor cach�)
-COPY *.sln ./
-
-# Ajusta estos paths seg�n tu repo:
-COPY SistemaParqueadero.Models/SistemaParqueadero.Models.csproj SistemaParqueadero.Models/
-COPY SistemaParqueadero.API/SistemaParqueadero.API.csproj SistemaParqueadero.API/
+# Copiar .csproj de ambos proyectos primero (cache de capas)
+COPY ["SistemaParqueadero/Models.csproj", "SistemaParqueadero/"]
+COPY ["SistemaParqueadero.API/SistemaParqueadero.API.csproj", "SistemaParqueadero.API/"]
 
 # Restaurar dependencias
-RUN dotnet restore
+RUN dotnet restore "SistemaParqueadero.API/SistemaParqueadero.API.csproj"
 
-# Copiar todo el c�digo
-COPY . .
+# Copiar todo el código fuente
+COPY ["SistemaParqueadero/", "SistemaParqueadero/"]
+COPY ["SistemaParqueadero.API/", "SistemaParqueadero.API/"]
 
-# Publicar
-RUN dotnet publish SistemaParqueadero.API/SistemaParqueadero.API.csproj -c Release -o /app/publish
+# Publicar en Release
+RUN dotnet publish "SistemaParqueadero.API/SistemaParqueadero.API.csproj" \
+    -c Release \
+    -o /app/publish \
+    --no-restore
 
-# ====== RUNTIME STAGE ======
+# ── Etapa 2: Runtime ──────────────────────────────────────────────────────────
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
-
-# Render usa PORT. ASP.NET escucha en 0.0.0.0
-ENV ASPNETCORE_URLS=http://0.0.0.0:${PORT}
-
-# Copiar publish
 COPY --from=build /app/publish .
 
-# Exponer puerto (Render lo maneja igual, pero ayuda)
+ENV ASPNETCORE_URLS=http://+:${PORT:-10000}
+ENV ASPNETCORE_ENVIRONMENT=Production
 EXPOSE 10000
 
-# Iniciar
 ENTRYPOINT ["dotnet", "SistemaParqueadero.API.dll"]
