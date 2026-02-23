@@ -1,11 +1,11 @@
-﻿// Si estás en local, usa tu API local (ajusta puertos si los tuyos son otros)
-const API_LOCAL_HTTPS = "https://localhost:7187";
+﻿const API_LOCAL_HTTPS = "https://localhost:7187";
 const API_LOCAL_HTTP = "http://localhost:5091";
+const API_PRODUCTION = "https://sistemaparqueadero-api.onrender.com";
 
 export const API_BASE =
     (location.hostname === "localhost" || location.hostname === "127.0.0.1")
         ? (location.protocol === "https:" ? API_LOCAL_HTTPS : API_LOCAL_HTTP)
-        : location.origin;
+        : API_PRODUCTION;
 
 export async function apiFetch(path, options = {}) {
     const token = localStorage.getItem("jwt") || sessionStorage.getItem("jwt");

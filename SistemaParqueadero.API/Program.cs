@@ -63,7 +63,7 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
-
+    
 var app = builder.Build();
 
 //if (app.Environment.IsDevelopment())
@@ -74,7 +74,7 @@ var app = builder.Build();
 
 app.UseCors("AllowAll");
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 // orden correcto
 app.UseAuthentication();
